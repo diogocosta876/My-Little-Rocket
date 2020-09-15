@@ -25,6 +25,22 @@ public class Rocket : MonoBehaviour
         Rotate();
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "Friendly":
+                print("Friendly");
+                break;
+            case "FinishedLevel":
+                print("You Won");
+                break;
+            default:
+                print("You are Dead");  // todo kill player
+                break;
+        }
+    }
+
     private void Rotate()
     {
 
@@ -55,7 +71,6 @@ public class Rocket : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            print("Thrusting" + ThrustingSpeed);
             rigidBody.AddRelativeForce(0, ThrustingSpeed, 0);
             if (audiosource.isPlaying == false) //So it doesn't repeat
             {
