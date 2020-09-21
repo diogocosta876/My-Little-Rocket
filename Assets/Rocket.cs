@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
@@ -34,12 +35,14 @@ public class Rocket : MonoBehaviour
                 break;
             case "FinishedLevel":
                 print("You Won");
+                SceneManager.LoadScene(1);
                 break;
             case "Fuel":
                 print("Refueled");
                 break;
             default:
                 print("You are Dead");  // todo kill player
+                SceneManager.LoadScene(0);
                 break;
         }
     }
