@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Friendly
   - FinishedLevel
+  - Fuel
   layers:
   - Default
   - TransparentFX

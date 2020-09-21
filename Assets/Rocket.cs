@@ -35,6 +35,9 @@ public class Rocket : MonoBehaviour
             case "FinishedLevel":
                 print("You Won");
                 break;
+            case "Fuel":
+                print("Refueled");
+                break;
             default:
                 print("You are Dead");  // todo kill player
                 break;
