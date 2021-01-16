@@ -10,6 +10,9 @@ public class Rocket : MonoBehaviour
     public float ThrustingSpeedMultiplier;
     bool hasCollided;
 
+    enum State { Alive, dying, Progressing}
+    State state = State.Alive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,29 +25,47 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        if (state != State.dying)
+        {
+            Thrust();
+            Rotate();
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        if (state != State.Alive){ return;}   //ignore collisions when dead
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
                 print("Friendly");
                 break;
             case "FinishedLevel":
+                state = State.Progressing;
                 print("You Won");
-                SceneManager.LoadScene(1);
+                Invoke("LoadNextLevel", 1f);
                 break;
             case "Fuel":
                 print("Refueled");
                 break;
             default:
-                print("You are Dead");  // todo kill player
-                SceneManager.LoadScene(0);
+                state = State.dying;
+                print("You are Dead");
+                Invoke("LoadFirstLevel", 1f);
+                audiosource.Stop();
                 break;
         }
+}
+
+    private void LoadNextLevel()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Rotate()
@@ -57,17 +78,19 @@ public class Rocket : MonoBehaviour
 
         float RotationSpeed = Time.deltaTime * RotationSpeedMultiplier;
 
-        if (Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.A)))
-        {
-            print("You cant rotate both ways");
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(0,0, RotationSpeed);
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(0, 0, -RotationSpeed);
+        if (state != State.dying) {
+            if (Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.A)))
+            {
+                print("You cant rotate both ways");
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                transform.Rotate(0,0, RotationSpeed);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                transform.Rotate(0, 0, -RotationSpeed);
+            }
         }
     }
 
